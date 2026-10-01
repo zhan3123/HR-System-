@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengembangan Sistem HR Management untuk Prediksi Kebutuhan Karyawan</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f4f7fa;
+    }
+
+    /* Navbar */
+    nav {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        padding: 1rem 5%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    nav .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    nav .logo {
+        color: #fff;
+        font-size: 1.3rem;
+        font-weight: bold;
+    }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+    }
+
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+        color: #ffd700;
+    }
+
+    /* Hero */
+    .hero {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: #fff;
+        padding: 5rem 5% 6rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+    }
+
+    .hero-content {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.3;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+
+    .hero .btn {
+        display: inline-block;
+        padding: 0.9rem 2rem;
+        background: #ffd700;
+        color: #1e3c72;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: transform 0.3s, box-shadow 0.3s;
+        margin: 0.5rem;
+    }
+
+    .hero .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .hero .btn-outline {
+        background: transparent;
+        border: 2px solid #ffd700;
+        color: #ffd700;
+    }
+
+    /* Section */
+    section {
+        padding: 4rem 5%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+        font-size: 2rem;
+        color: #1e3c72;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+        color: #666;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: #ffd700;
+        margin: 1rem auto 0;
+        border-radius: 2px;
+    }
+
+    /* Cards */
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    .card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-top: 4px solid #2a5298;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .card .icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .card h3 {
+        color: #1e3c72;
+        margin-bottom: 0.8rem;
+        font-size: 1.2rem;
+    }
+
+    .card p {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    /* Fitur / Alur */
+    .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        counter-reset: step;
+    }
+
+    .step {
+        background: #fff;
+        padding: 2rem 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        position: relative;
+    }
+
+    .step::before {
+        counter-increment: step;
+        content: counter(step);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: #ffd700;
+        font-weight: bold;
+        font-size: 1.3rem;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+    }
+
+    .step h4 {
+        color: #1e3c72;
+        margin-bottom: 0.5rem;
+    }
+
+    .step p {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    /* Prediksi / Simulasi */
+    .predictor {
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 1.3rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #1e3c72;
+        font-weight: 600;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 2px solid #e0e6ed;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        font-family: inherit;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+        outline: none;
+        border-color: #2a5298;
+    }
+
+    .predictor button {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .predictor button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(30,60,114,0.3);
+    }
+
+    .result {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        background: #e8f4fd;
+        border-left: 5px solid #2a5298;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .result.show {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .result h3 {
+        color: #1e3c72;
+        margin-bottom: 0.8rem;
+    }
+
+    .result .big-number {
+        font-size: 2.5rem;
+        color: #2a5298;
+        font-weight: bold;
+        text-align: center;
+        margin: 1rem 0;
+    }
+
+    .result .details {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Teknologi */
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .tech-badge {
+        background: #fff;
+        padding: 0.7rem 1.5rem;
+        border-radius: 30px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        color: #1e3c72;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: 2px solid #e0e6ed;
+        transition: all 0.3s;
+    }
+
+    .tech-badge:hover {
+        background: #2a5298;
+        color: #ffd700;
+        border-color: #2a5298;
+        transform: translateY(-3px);
+    }
+
+    /* Footer */
+    footer {
+        background: #1e3c72;
+        color: #fff;
+        text-align: center;
+        padding: 2rem 5%;
+        margin-top: 3rem;
+    }
+
+    footer p {
+        opacity: 0.85;
+        font-size: 0.9rem;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        nav ul {
+            display: none;
+        }
+
+        .hero h1 {
+            font-size: 1.8rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+
+        .section-title h2 {
+            font-size: 1.5rem;
+        }
+
+        .predictor {
+            padding: 1.5rem;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">📊 HR Prediction System</div>
+        <ul>
+            <li><a href="#tentang">Tentang</a></li>
+            <li><a href="#fitur">Fitur</a></li>
+            <li><a href="#alur">Alur</a></li>
+            <li><a href="#prediksi">Prediksi</a></li>
+            <li><a href="#teknologi">Teknologi</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+    <div class="hero-content">
+        <h1>Pengembangan Sistem HR Management untuk Prediksi Kebutuhan Karyawan Berdasarkan Beban Kerja Menggunakan RapidMiner</h1>
+        <p>Sistem cerdas berbasis data mining untuk membantu perusahaan menentukan jumlah karyawan optimal sesuai beban kerja aktual</p>
+        <a href="#prediksi" class="btn">🔍 Coba Simulasi Prediksi</a>
+        <a href="#tentang" class="btn btn-outline">📖 Pelajari Lebih Lanjut</a>
+    </div>
+</header>
+
+<!-- Tentang -->
+<section id="tentang">
+    <div class="section-title">
+        <h2>Tentang Sistem</h2>
+        <p>Solusi HR Management berbasis data mining</p>
+    </div>
+    <div class="cards">
+        <div class="card">
+            <div class="icon">🎯</div>
+            <h3>Tujuan</h3>
+            <p>Memprediksi kebutuhan jumlah karyawan berdasarkan beban kerja menggunakan algoritma data mining pada RapidMiner untuk meningkatkan efisiensi SDM.</p>
+        </div>
+        <div class="card">
+            <div class="icon">📈</div>
+            <h3>Manfaat</h3>
+            <p>Membantu manajemen HR dalam pengambilan keputusan perekrutan, mengurangi overstaffing dan understaffing, serta mengoptimalkan produktivitas.</p>
+        </div>
+        <div class="card">
+            <div class="icon">🧠</div>
+            <h3>Metode</h3>
+            <p>Menggunakan teknik data mining seperti Linear Regression, Decision Tree, dan K-Means clustering untuk analisis beban kerja dan prediksi kebutuhan tenaga kerja.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Fitur -->
+<section id="fitur" style="background:#f9fbfd;">
+    <div class="section-title">
+        <h2>Fitur Utama</h2>
+        <p>Fungsi unggulan sistem HR Management</p>
+    </div>
+    <div class="cards">
+        <div class="card">
+            <div class="icon">👥</div>
+            <h3>Manajemen Data Karyawan</h3>
+            <p>Pengelolaan data karyawan meliputi profil, departemen, jabatan, dan riwayat kinerja secara terpusat.</p>
+        </div>
+        <div class="card">
+            <div class="icon">⚖️</div>
+            <h3>Analisis Beban Kerja</h3>
+            <p>Mengukur beban kerja tiap departemen berdasarkan volume tugas, jam kerja, dan output yang dihasilkan.</p>
+        </div>
+        <div class="card">
+            <div class="icon">🔮</div>
+            <h3>Prediksi Kebutuhan</h3>
+            <p>Memprediksi jumlah karyawan ideal di masa depan menggunakan model machine learning dari RapidMiner.</p>
+        </div>
+        <div class="card">
+            <div class="icon">📊</div>
+            <h3>Visualisasi Data</h3>
+            <p>Menampilkan grafik dan dashboard interaktif untuk memantau tren beban kerja dan kebutuhan SDM.</p>
+        </div>
+        <div class="card">
+            <div class="icon">📄</div>
+            <h3>Laporan Otomatis</h3>
+            <p>Menghasilkan laporan prediksi kebutuhan karyawan yang dapat diunduh dan digunakan untuk perencanaan.</p>
+        </div>
+        <div class="card">
+            <div class="icon">🔔</div>
+            <h3>Notifikasi Rekrutmen</h3>
+            <p>Peringatan dini ketika suatu departemen diprediksi membutuhkan tambahan karyawan dalam waktu dekat.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Alur -->
+<section id="alur">
+    <div class="section-title">
+        <h2>Alur Pengembangan Sistem</h2>
+        <p>Tahapan pembangunan sistem prediksi kebutuhan karyawan</p>
+    </div>
+    <div class="steps">
+        <div class="step">
+            <h4>Pengumpulan Data</h4>
+            <p>Mengumpulkan data karyawan, beban kerja, dan volume pekerjaan dari perusahaan.</p>
+        </div>
+        <div class="step">
+            <h4>Preprocessing</h4>
+            <p>Membersihkan data, menangani missing value, dan normalisasi data pada RapidMiner.</p>
+        </div>
+        <div class="step">
+            <h4>Pemodelan</h4>
+            <p>Menerapkan algoritma regresi, decision tree, dan clustering untuk membangun model prediksi.</p>
+        </div>
+        <div class="step">
+            <h4>Evaluasi</h4>
+            <p>Mengukur akurasi model dengan RMSE, MAE, dan cross-validation.</p>
+        </div>
+        <div class="step">
+            <h4>Implementasi</h4>
+            <p>Mengintegrasikan model ke dalam sistem HR Management berbasis web.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Prediksi -->
+<section id="prediksi" style="background:linear-gradient(135deg,#f0f4f8,#e8eef5);">
+    <div class="section-title">
+        <h2>Simulasi Prediksi Kebutuhan Karyawan</h2>
+        <p>Masukkan data beban kerja untuk melihat prediksi kebutuhan karyawan</p>
+    </div>
+
+    <div class="predictor">
+        <div class="form-group">
+            <label for="departemen">Departemen</label>
+            <select id="departemen">
+                <option value="Produksi">Produksi</option>
+                <option value="Pemasaran">Pemasaran</option>
+                <option value="Keuangan">Keuangan</option>
+                <option value="IT">IT</option>
+                <option value="HRD">HRD</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="jumlahKaryawan">Jumlah Karyawan Saat Ini</label>
+            <input type="number" id="jumlahKaryawan" placeholder="Contoh: 20" min="1" value="20">
+        </div>
+
+        <div class="form-group">
+            <label for="volumeKerja">Volume Pekerjaan (unit/tugas per bulan)</label>
+            <input type="number" id="volumeKerja" placeholder="Contoh: 1500" min="1" value="1500">
+        </div>
+
+        <div class="form-group">
+            <label for="jamLembur">Rata-rata Jam Lembur per Karyawan (jam/bulan)</label>
+            <input type="number" id="jamLembur" placeholder="Contoh: 25" min="0" value="25">
+        </div>
+
+        <div class="form-group">
+            <label for="targetOutput">Target Output Bulan Depan</label>
+            <input type="number" id="targetOutput" placeholder="Contoh: 2000" min="1" value="2000">
+        </div>
+
+        <button onclick="hitungPrediksi()">🔮 Hitung Prediksi</button>
+
+        <div class="result" id="result">
+            <h3>📋 Hasil Prediksi</h3>
+            <div class="big-number" id="hasilAngka">-</div>
+            <div class="details" id="hasilDetail"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Teknologi -->
+<section id="teknologi">
+    <div class="section-title">
+        <h2>Teknologi yang Digunakan</h2>
+        <p>Tools dan metode pendukung sistem</p>
+    </div>
+    <div class="tech-stack">
+        <span class="tech-badge">RapidMiner</span>
+        <span class="tech-badge">Data Mining</span>
+        <span class="tech-badge">Machine Learning</span>
+        <span class="tech-badge">Linear Regression</span>
+        <span class="tech-badge">Decision Tree</span>
+        <span class="tech-badge">K-Means Clustering</span>
+        <span class="tech-badge">PHP / Laravel</span>
+        <span class="tech-badge">MySQL</span>
+        <span class="tech-badge">HTML5</span>
+        <span class="tech-badge">CSS3</span>
+        <span class="tech-badge">JavaScript</span>
+        <span class="tech-badge">Bootstrap</span>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 Sistem HR Management - Prediksi Kebutuhan Karyawan Menggunakan RapidMiner</p>
+    <p>Dikembangkan untuk penelitian skripsi / tugas akhir</p>
+</footer>
+
+<script>
+    function hitungPrediksi() {
+        const jumlahKaryawan = parseFloat(document.getElementById('jumlahKaryawan').value) || 0;
+        const volumeKerja = parseFloat(document.getElementById('volumeKerja').value) || 0;
+        const jamLembur = parseFloat(document.getElementById('jamLembur').value) || 0;
+        const targetOutput = parseFloat(document.getElementById('targetOutput').value) || 0;
+        const departemen = document.getElementById('departemen').value;
+
+        // Validasi
+        if (jumlahKaryawan <= 0 || volumeKerja <= 0 || targetOutput <= 0) {
+            alert('Mohon isi semua data dengan benar!');
+            return;
+        }
+
+        // Produktivitas per karyawan saat ini
+        const produktivitasPerKaryawan = volumeKerja / jumlahKaryawan;
+
+        // Estimasi beban kerja berdasarkan target output
+        const rasioTarget = targetOutput / volumeKerja;
+        const kebutuhanDasar = jumlahKaryawan * rasioTarget;
+
+        // Faktor koreksi akibat lembur (semakin tinggi lembur, semakin butuh tambahan karyawan)
+        const faktorLembur = 1 + (jamLembur / 200);
+
+        // Prediksi kebutuhan karyawan (dibulatkan ke atas)
+        let prediksi = Math.ceil(kebutuhanDasar * faktorLembur);
+
+        // Tambahkan buffer 5-10% untuk cadangan
+        prediksi = Math.ceil(prediksi * 1.05);
+
+        const selisih = prediksi - jumlahKaryawan;
+
+        // Tampilkan hasil
+        document.getElementById('hasilAngka').textContent = prediksi + ' Karyawan';
+        
+        let rekomendasi = '';
+        if (selisih > 0) {
+            rekomendasi = `<span style="color:#e74c3c;font-weight:bold;">⚠️ Perlu tambahan ${selisih} karyawan</span>`;
+        } else if (selisih < 0) {
+            rekomendasi = `<span style="color:#27ae60;font-weight:bold;">✅ Kelebihan ${Math.abs(selisih)} karyawan (bisa dievaluasi)</span>`;
+        } else {
+            rekomendasi = `<span style="color:#27ae60;font-weight:bold;">✅ Jumlah karyawan sudah optimal</span>`;
+        }
+
+        document.getElementById('hasilDetail').innerHTML = `
+            <p><strong>Departemen:</strong> ${departemen}</p>
+            <p><strong>Karyawan saat ini:</strong> ${jumlahKaryawan} orang</p>
+            <p><strong>Produktivitas per karyawan:</strong> ${produktivitasPerKaryawan.toFixed(2)} unit/orang</p>
+            <p><strong>Target output:</strong> ${targetOutput} unit</p>
+            <p><strong>Faktor lembur:</strong> ${faktorLembur.toFixed(2)}x</p>
+            <hr style="margin:10px 0;border:none;border-top:1px dashed #bbb;">
+            <p><strong>Prediksi kebutuhan karyawan:</strong> <span style="color:#2a5298;font-size:1.3rem;font-weight:bold;">${prediksi} orang</span></p>
+            <p>${rekomendasi}</p>
+            <p style="margin-top:10px;font-size:0.85rem;color:#888;font-style:italic;">
+                *Hasil prediksi ini merupakan simulasi sederhana. Pada sistem sebenarnya, perhitungan dilakukan menggunakan model RapidMiner yang telah dilatih dengan data historis perusahaan.
+            </p>
+        `;
+
+        document.getElementById('result').classList.add('show');
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
